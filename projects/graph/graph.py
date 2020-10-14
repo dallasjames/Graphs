@@ -3,9 +3,10 @@ Simple graph implementation
 """
 from util import Stack, Queue  # These may come in handy
 
-class Graph:
 
+class Graph:
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
+
     def __init__(self):
         self.vertices = {}
 
@@ -25,26 +26,28 @@ class Graph:
         return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
-        queue = [starting_vertex]
+        queue = Queue()
         visited = set()
-        while len(queue) > 0:
-            current_vertex = queue.pop(0)
-            if current_vertex not in visited:
-                print(current_vertex)
-                visited.add(current_vertex)
-                for i in self.get_neighbors(current_vertex):
-                    queue.append(i)
+        queue.enqueue(starting_vertex)
+        while queue.size() > 0:
+            current = queue.dequeue()
+            if current not in visited:
+                print(current)
+                visited.add(current)
+                for i in self.get_neighbors(current):
+                    queue.enqueue(i)
 
     def dft(self, starting_vertex):
-        stack = [starting_vertex]
+        stack = Stack()
         visited = set()
-        while len(stack) > 0:
-            current_vertex = stack.pop()
-            if current_vertex not in visited:
-                print(current_vertex)
-                visited.add(current_vertex)
-                for i in self.get_neighbors(current_vertex):
-                    stack.append(i)
+        stack.push(starting_vertex)
+        while stack.size() > 0:
+            current = stack.pop()
+            if current not in visited:
+                print(current)
+                visited.add(current)
+                for i in self.get_neighbors(current):
+                    stack.push(i)
 
     def dft_recursive(self, starting_vertex):
         """
@@ -56,20 +59,36 @@ class Graph:
         pass  # TODO
 
     def bfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
-        pass  # TODO
+        queue = Queue()
+        queue.enqueue([starting_vertex])
+        visited = set()
+        while queue.size() > 0:
+            path = queue.dequeue()
+            current = path[-1]
+            if current not in visited:
+                if current == destination_vertex:
+                    return path
+            visited.add(current)
+            for i in self.vertices[current]:
+                new_path = list(path)
+                new_path.append(i)
+                queue.enqueue(new_path)
 
     def dfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-        """
-        pass  # TODO
+        stack = Stack()
+        stack.push([starting_vertex])
+        visited = set()
+        while stack.size() > 0:
+            path = stack.pop()
+            current = path[-1]
+            if current not in visited:
+                if current == destination_vertex:
+                    return path
+            visited.add(current)
+            for i in self.vertices[current]:
+                new_path = list(path)
+                new_path.append(i)
+                stack.push(new_path)
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -80,6 +99,7 @@ class Graph:
         This should be done using recursion.
         """
         pass  # TODO
+
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
