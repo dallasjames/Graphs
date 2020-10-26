@@ -66,19 +66,17 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
+        queue = [[user_id]]
         visited = {}
-        queue = Queue()
-        queue.enqueue([user_id])
-        while queue.size() > 0:
-            path = queue.dequeue()
-            new_user_id = path[-1]
-            if new_user_id not in visited:
-                visited[new_user_id] = path
-                for friendID in self.friendships[new_user_id]:
-                    if friendID not in visited:
-                        new_path = list(path)
-                        new_path.append(friendID)
-                        queue.enqueue(new_path)
+        while len(queue) > 0:
+            path = queue.pop(0)
+            current_vertex = path[-1]
+            if current_vertex not in visited:
+                visited[current_vertex] = path
+                for i in self.friendships[current_vertex]:
+                    path_copy = path.copy()
+                    path_copy.append(i)
+                    queue.append(path_copy)
         return visited
 
 
